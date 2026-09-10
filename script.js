@@ -1,6 +1,6 @@
 // Paste your Google Apps Script web app URL here after deploying it.
 // It looks like: https://script.google.com/macros/s/AKfycb.../exec
-const API_URL = 'https://script.google.com/macros/s/AKfycbxhNg5ebT3fXzx6iYpLXnoAKsMhu6eSQzloHHna_iAmVVlKiEMYRZUOIsbdLmIhwOtNYA/exec';
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
 
 const state = {
   menuItems: [], // [{ item, price }]
@@ -132,20 +132,48 @@ function getOrderPayload() {
 }
 
 async function submitOrder() {
-    try {
-     await fetch(API_URL, {
-       method: 'POST',
-       mode: 'no-cors',
-       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-       body: JSON.stringify({
-         name,
-         items,
-         total,
-         timestamp: new Date().toISOString(),
-       }),
-     });
+  const name = els.customerName.value.trim();
+  const { items, total } = getOrderPayload();
 
-     els.status.textContent = `Order sent for ${name}. See you at lunch!`;
+  els.status.className = 'order-status';
+  els.status.textContent = '';
+
+  if (!name) {
+    els.status.textContent = 'Enter a name before sending the order.';
+    els.status.className = 'order-status error';
+    els.customerName.focus();
+    return;
+  }
+
+  if (items.length === 0) {
+    els.status.textContent = 'Add at least one item before sending.';
+    els.status.className = 'order-status error';
+    return;
+  }
+
+  if (!isConfigured()) {
+    els.status.textContent = 'Ordering isn\u2019t connected yet — see script.js.';
+    els.status.className = 'order-status error';
+    return;
+  }
+
+  els.submitBtn.disabled = true;
+  els.submitBtn.textContent = 'Sending\u2026';
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        name,
+        items,
+        total,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+
+    els.status.textContent = `Order sent for ${name}. See you at lunch!`;
     els.status.className = 'order-status success';
 
     state.order = {};
