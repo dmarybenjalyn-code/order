@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Today's Lunch Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="config-banner" class="config-banner" hidden>
+    Setup needed: open <code>script.js</code> and set <code>API_URL</code> to your Apps Script web app URL.
+  </div>
+
+  <header class="site-header">
+    <h1>Today's Lunch</h1>
+    <p id="menu-label" class="menu-label"></p>
+  </header>
+
+  <main class="layout">
+
+    <section class="board" aria-labelledby="menu-heading">
+      <h2 id="menu-heading" class="board-heading">Menu</h2>
+      <ul id="menu-list" class="menu-list" aria-live="polite">
+        <li class="menu-loading">Loading menu&hellip;</li>
+      </ul>
+    </section>
+
+    <section class="ticket" aria-labelledby="ticket-heading">
+      <div class="ticket-edge" aria-hidden="true"></div>
+
+      <div class="ticket-body">
+        <h2 id="ticket-heading" class="ticket-heading">Your order</h2>
+
+        <label class="field" for="customer-name">
+          <span class="field-label">Name</span>
+          <input
+            id="customer-name"
+            type="text"
+            placeholder="Who's this order for?"
+            autocomplete="name"
+          />
+        </label>
+
+        <ul id="order-lines" class="order-lines">
+          <li class="order-empty">Add something from the menu to get started.</li>
+        </ul>
+
+        <div class="order-total-row">
+          <span>Total</span>
+          <span id="order-total">$0.00</span>
+        </div>
+
+        <button id="submit-order" class="submit-button" type="button">
+          Send order
+        </button>
+
+        <p id="order-status" class="order-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Prices update daily &mdash; check back tomorrow for a new menu.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
