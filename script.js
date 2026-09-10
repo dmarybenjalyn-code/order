@@ -19,7 +19,7 @@ const els = {
 };
 
 function money(n) {
-  return '$' + n.toFixed(2);
+  return '₱' + n.toFixed(2);
 }
 
 function isConfigured() {
@@ -112,7 +112,7 @@ function renderTicket() {
     const li = document.createElement('li');
     li.className = 'order-line';
     li.innerHTML = `
-      <span class="order-line-name">${qty}&times; ${escapeHtml(itemName)}</span>
+      <span class="order-line-name">${qty} ${escapeHtml(itemName)}</span>
       <span class="order-line-price">${money(lineTotal)}</span>
     `;
     els.orderLines.appendChild(li);
@@ -132,50 +132,20 @@ function getOrderPayload() {
 }
 
 async function submitOrder() {
-  const name = els.customerName.value.trim();
-  const { items, total } = getOrderPayload();
+    try {
+     await fetch(API_URL, {
+       method: 'POST',
+       mode: 'no-cors',
+       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+       body: JSON.stringify({
+         name,
+         items,
+         total,
+         timestamp: new Date().toISOString(),
+       }),
+     });
 
-  els.status.className = 'order-status';
-  els.status.textContent = '';
-
-  if (!name) {
-    els.status.textContent = 'Enter a name before sending the order.';
-    els.status.className = 'order-status error';
-    els.customerName.focus();
-    return;
-  }
-
-  if (items.length === 0) {
-    els.status.textContent = 'Add at least one item before sending.';
-    els.status.className = 'order-status error';
-    return;
-  }
-
-  if (!isConfigured()) {
-    els.status.textContent = 'Ordering isn\u2019t connected yet — see script.js.';
-    els.status.className = 'order-status error';
-    return;
-  }
-
-  els.submitBtn.disabled = true;
-  els.submitBtn.textContent = 'Sending\u2026';
-
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        name,
-        items,
-        total,
-        timestamp: new Date().toISOString(),
-      }),
-    });
-    const data = await res.json();
-
-    if (!data.ok) throw new Error(data.error || 'Order was not saved');
-
-    els.status.textContent = `Order sent for ${name}. See you at lunch!`;
+     els.status.textContent = `Order sent for ${name}. See you at lunch!`;
     els.status.className = 'order-status success';
 
     state.order = {};
