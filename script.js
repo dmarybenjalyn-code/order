@@ -1,6 +1,6 @@
 // Paste your Google Apps Script web app URL here after deploying it.
 // It looks like: https://script.google.com/macros/s/AKfycb.../exec
-const API_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxhNg5ebT3fXzx6iYpLXnoAKsMhu6eSQzloHHna_iAmVVlKiEMYRZUOIsbdLmIhwOtNYA/exec';
 
 const state = {
   menuItems: [], // [{ item, price }]
